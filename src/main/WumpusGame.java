@@ -36,7 +36,7 @@ public class WumpusGame {
 
     public WumpusGame() {
         bot = new WumpusBot();
-        bot.setTracing(true);
+        bot.setTracing(false);
         setTracing(false);
         scanner = new Scanner(System.in);
         play();
@@ -58,7 +58,8 @@ public class WumpusGame {
             bot.newGame();
             printState();
             int temp;
-            while (true) {
+            boolean gameOver = false;
+            while (!gameOver) {
                 System.out.print("\n");
                 System.out.print("Please choose from (W)alk, (S)hoot, or (Q)uit: ");
                 String order = scanner.nextLine();
@@ -67,28 +68,31 @@ public class WumpusGame {
                     temp = Integer.parseInt(scanner.nextLine());
                     if (doWalk(bot.tryWalk(temp))) {
                         System.out.print("\n" + "Would you like to play Hunt the Wumpus again? ");
-                        break;
+                        gameOver = true;
+                    } else {
+                        printState();
                     }
-                    printState();
                 } else if (order.equals("s")) {
                     if (arrowNum == 0) {
                         System.out.println("You can't shoot -- you have no arrows left!");
+                        printState();
                     } else {
                         System.out.print("Which cave would you like to shoot into? ");
                         temp = Integer.parseInt(scanner.nextLine());
                         if (doShoot(bot.tryShoot(temp))) {
                             System.out.println("\n" + "Would you like to play Hunt the Wumpus again?");
-                            break;
+                            gameOver = true;
+                        } else {
+                            printState();
                         }
                     }
-                    printState();
                 } else if (order.equals("q")) {
                     System.out.print("\n" + "Would you like to play Hunt the Wumpus again? ");
                     timesPlay++;
                     timesLostQuit++;
-                    break;
+                    gameOver = true;
                 } else {
-                    break;
+                    gameOver = true;
                 }
 
             }
